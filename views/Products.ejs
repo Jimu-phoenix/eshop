@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="product.css">
+</head>
+<body>
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Actions</th>
+        </tr>
+    <% products.forEach(element => { %>
+        <tr>
+            <td> <%= element.id %> </td>
+            <td> <%= element.name %> </td>
+            <td> <%= element.des %> </td>
+            <td> <%= element.price %> </td>
+            <td class="actions"><a href="/editProduct/<%= element.id %>" class="ed">Edit</a><a href="/delete/<%= element.id %>" class="del">Delete</a></td>
+        </tr>
+   <% }); %>
+   </table>
+       <form id="myform">
+        <label for="id">Id:</label>
+        <input type="number" name="id" id="pId" placeholder="eg 101" required>
+        <label for="name">Name:</label>
+        <input type="text" name="name" id="pname" placeholder="eg kettle" required>
+        <label for="price">Price:</label>
+        <input type="number" name="price" id="price" placeholder="eg 5000" required>
+        <label for="description">Description:</label>
+        <textarea name="description" id="description"></textarea>
+        <button type="reset">Clear</button>
+        <button type="submit" id="sub">Add</button>
+        
+
+    </form>
+
+    <script>
+
+        const postData = async (pid, pname, description, proPrice) => {
+            const res = await fetch('http://localhost:7000/addProduct', {
+                method: 'POST',
+                headers: {'Content-Type' : 'application/json'},
+                body: JSON.stringify({
+                    id: pid,
+                    name: pname,
+                    desc: description,
+                    price: proPrice,
+                    img: ""
+                })
+            })
+        
+            const data = await res.json();
+            return data;
+        }
+
+        document.getElementById('myform').addEventListener('submit', (e)=>{
+            e.preventDefault();
+            let pId = e.target.id.value
+            let pname = e.target.name.value
+            let price = e.target.price.value
+            let description = e.target.description.value
+
+            let res = postData(pId, pname, description, price)
+
+            if(res){
+                console.log("Added!")
+                e.target.id.value = ""
+                e.target.name.value = ""
+                e.target.price.value = ""
+                e.target.description.value = ""
+            }
+        })
+    </script>
+
+</body>
+</html>
