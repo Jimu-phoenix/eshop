@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Tracking - Online Store</title>
+    <link rel="stylesheet" href="/Cart/cart.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="tracking-header">
+            <h1>Track Your Order</h1>
+            <p>Enter your order number to track your delivery</p>
+        </header>
+
+        <!-- Order Search -->
+        <div class="order-search-card">
+            <form id="trackingForm">
+                <div class="search-input-group">
+                    <input 
+                        type="text" 
+                        id="orderNumberInput" 
+                        placeholder="Enter Order Number (e.g., ORD-2024-001234)" 
+                        required
+                    >
+                    <button type="submit" class="track-btn">Track Order</button>
+                </div>
+                <div class="error-message" id="searchError"></div>
+            </form>
+        </div>
+
+        <!-- Order Tracking Details (Hidden initially) -->
+        <div id="trackingResults" class="tracking-results" style="display: none;">
+            <!-- Order Status Card -->
+            <div class="status-card">
+                <div class="status-header">
+                    <div class="order-info">
+                        <h2>Order #<span id="displayOrderNumber">ORD-2024-001234</span></h2>
+                        <p class="order-date">Placed on <span id="displayOrderDate">September 28, 2024</span></p>
+                    </div>
+                    <div class="status-badge" id="currentStatus">
+                        <span class="status-icon">📦</span>
+                        <span class="status-text">In Transit</span>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="progress-tracker">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="progress-steps">
+                        <div class="progress-step completed" data-step="1">
+                            <div class="step-icon">✅</div>
+                            <div class="step-label">Order Placed</div>
+                            <div class="step-date">Sep 28</div>
+                        </div>
+                        <div class="progress-step completed" data-step="2">
+                            <div class="step-icon">📦</div>
+                            <div class="step-label">Processing</div>
+                            <div class="step-date">Sep 29</div>
+                        </div>
+                        <div class="progress-step active" data-step="3">
+                            <div class="step-icon">🚚</div>
+                            <div class="step-label">Shipped</div>
+                            <div class="step-date">Oct 1</div>
+                        </div>
+                        <div class="progress-step" data-step="4">
+                            <div class="step-icon">🏠</div>
+                            <div class="step-label">Delivered</div>
+                            <div class="step-date">Oct 5</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estimated Delivery -->
+                <div class="delivery-estimate">
+                    <div class="estimate-icon">📅</div>
+                    <div class="estimate-details">
+                        <h3>Estimated Delivery</h3>
+                        <p class="estimate-date" id="estimatedDelivery">Friday, October 5, 2024</p>
+                        <p class="estimate-countdown" id="deliveryCountdown">4 days remaining</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tracking Timeline -->
+            <div class="timeline-card">
+                <h3>Tracking History</h3>
+                <div class="timeline">
+                    <div class="timeline-event completed">
+                        <div class="event-marker"></div>
+                        <div class="event-content">
+                            <div class="event-header">
+                                <h4>Out for Delivery</h4>
+                                <span class="event-time">Oct 1, 2024 - 08:30 AM</span>
+                            </div>
+                            <p class="event-location">Blantyre Distribution Center</p>
+                            <p class="event-description">Your package is on the delivery vehicle and will arrive soon</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-event completed">
+                        <div class="event-marker"></div>
+                        <div class="event-content">
+                            <div class="event-header">
+                                <h4>In Transit</h4>
+                                <span class="event-time">Sep 30, 2024 - 02:15 PM</span>
+                            </div>
+                            <p class="event-location">Lilongwe Sorting Facility</p>
+                            <p class="event-description">Package is on its way to the destination</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-event completed">
+                        <div class="event-marker"></div>
+                        <div class="event-content">
+                            <div class="event-header">
+                                <h4>Shipped</h4>
+                                <span class="event-time">Sep 29, 2024 - 05:45 PM</span>
+                            </div>
+                            <p class="event-location">Warehouse - Lilongwe</p>
+                            <p class="event-description">Package has been picked up by courier</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-event completed">
+                        <div class="event-marker"></div>
+                        <div class="event-content">
+                            <div class="event-header">
+                                <h4>Processing</h4>
+                                <span class="event-time">Sep 29, 2024 - 10:00 AM</span>
+                            </div>
+                            <p class="event-location">Warehouse - Lilongwe</p>
+                            <p class="event-description">Order is being prepared for shipment</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-event completed">
+                        <div class="event-marker"></div>
+                        <div class="event-content">
+                            <div class="event-header">
+                                <h4>Order Confirmed</h4>
+                                <span class="event-time">Sep 28, 2024 - 03:22 PM</span>
+                            </div>
+                            <p class="event-location">Online Store</p>
+                            <p class="event-description">Your order has been confirmed and payment received</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delivery Details -->
+            <div class="details-grid">
+                <!-- Delivery Address -->
+                <div class="details-card">
+                    <h3>Delivery Address</h3>
+                    <div class="address-info">
+                        <p class="recipient-name" id="recipientName">John Doe</p>
+                        <p id="deliveryStreet">123 Main Street</p>
+                        <p id="deliveryCity">Blantyre, Southern Region</p>
+                        <p id="deliveryPhone">+265 999 123 456</p>
+                    </div>
+                </div>
+
+                <!-- Order Items -->
+                <div class="details-card">
+                    <h3>Items in This Order</h3>
+                    <div class="order-items-list">
+                        <div class="order-item-preview">
+                            <img src="assets/images/laptop.jpg" alt="Gaming Laptop" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjZjBmMGYwIi8+PC9zdmc+'">
+                            <div class="item-preview-info">
+                                <span class="item-preview-name">Gaming Laptop</span>
+                                <span class="item-preview-qty">Qty: 1</span>
+                            </div>
+                        </div>
+                        <div class="order-item-preview">
+                            <img src="assets/images/book.jpg" alt="JavaScript Guide" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjZjBmMGYwIi8+PC9zdmc+'">
+                            <div class="item-preview-info">
+                                <span class="item-preview-name">JavaScript Guide</span>
+                                <span class="item-preview-qty">Qty: 2</span>
+                            </div>
+                        </div>
+                        <div class="order-item-preview">
+                            <img src="assets/images/microwave.jpg" alt="Smart Microwave" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjZjBmMGYwIi8+PC9zdmc+'">
+                            <div class="item-preview-info">
+                                <span class="item-preview-name">Smart Microwave</span>
+                                <span class="item-preview-qty">Qty: 1</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Support -->
+                <div class="details-card">
+                    <h3>Need Help?</h3>
+                    <div class="support-info">
+                        <p>If you have any questions about your order, feel free to contact us:</p>
+                        <div class="support-contact">
+                            <div class="contact-item">
+                                <span class="contact-icon">📧</span>
+                                <span>support@onlinestore.com</span>
+                            </div>
+                            <div class="contact-item">
+                                <span class="contact-icon">📱</span>
+                                <span>+265 1 234 567</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notifications -->
+                <div class="details-card">
+                    <h3>Notifications</h3>
+                    <div class="notifications-info">
+                        <div class="notification-status">
+                            <span class="notification-icon">✅</span>
+                            <span>Email notifications enabled</span>
+                        </div>
+                        <div class="notification-status">
+                            <span class="notification-icon">✅</span>
+                            <span>SMS updates enabled</span>
+                        </div>
+                        <p class="notification-note">You'll receive updates 2 days before delivery and on the delivery day</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="tracking-actions">
+                <button class="action-btn secondary" onclick="window.location.href='products.html'">
+                    Continue Shopping
+                </button>
+                <button class="action-btn primary" onclick="window.print()">
+                    Print Tracking Info
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    <div id="successMessage" class="success-message">
+        <span id="messageText">Tracking information loaded successfully!</span>
+    </div>
+
+    <script src="/Cart/order-tracking.js"></script>
+</body>
+</html>

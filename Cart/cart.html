@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - Online Store</title>
+    <link rel="stylesheet" href="/Cart/cart.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Cart Header -->
+        <header class="cart-header">
+            <h1>Shopping Cart</h1>
+            <div class="cart-count">
+                <span id="itemCount">3</span> items
+            </div>
+        </header>
+
+        <!-- Cart Content -->
+        <div class="cart-content">
+            <!-- Cart Items Section -->
+            <div class="cart-items">
+                <div id="cartItemsList">
+                    <!-- Cart Item 1 -->
+                    <div class="cart-item" data-item-id="1">
+                        <div class="item-image">
+                            <img src="assets/images/laptop.jpg" alt="Gaming Laptop" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjZjBmMGYwIi8+CjxwYXRoIGQ9Ik0zNSA2NUg2NVY0NUgzNVY2NVpNNDAgNDBINjBWMzVINDBWNDBaIiBmaWxsPSIjY2NjIi8+CjwvdXZnPgo='">
+                        </div>
+                        <div class="item-details">
+                            <h3 class="item-name">Gaming Laptop</h3>
+                            <p class="item-category">Electronics</p>
+                            <p class="item-description">High-performance gaming laptop with RTX graphics</p>
+                            <div class="item-price">$1,299.99</div>
+                        </div>
+                        <div class="item-controls">
+                            <div class="quantity-controls">
+                                <button class="qty-btn" onclick="updateQuantity(1, -1)">-</button>
+                                <input type="number" class="qty-input" value="1" min="1" onchange="updateQuantity(1, this.value)">
+                                <button class="qty-btn" onclick="updateQuantity(1, 1)">+</button>
+                            </div>
+                            <button class="remove-btn" onclick="removeItem(1)">Remove</button>
+                        </div>
+                    </div>
+
+                    <!-- Cart Item 2 -->
+                    <div class="cart-item" data-item-id="2">
+                        <div class="item-image">
+                            <img src="assets/images/book.jpg" alt="JavaScript Guide" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjZjBmMGYwIi8+CjxwYXRoIGQ9Ik0zNSA2NUg2NVY0NUgzNVY2NVpNNDAgNDBINjBWMzVINDBWNDBaIiBmaWxsPSIjY2NjIi8+CjwvdXZnPgo='">
+                        </div>
+                        <div class="item-details">
+                            <h3 class="item-name">JavaScript: The Complete Guide</h3>
+                            <p class="item-category">Books</p>
+                            <p class="item-description">Comprehensive JavaScript programming guide</p>
+                            <div class="item-price">$45.99</div>
+                        </div>
+                        <div class="item-controls">
+                            <div class="quantity-controls">
+                                <button class="qty-btn" onclick="updateQuantity(2, -1)">-</button>
+                                <input type="number" class="qty-input" value="2" min="1" onchange="updateQuantity(2, this.value)">
+                                <button class="qty-btn" onclick="updateQuantity(2, 1)">+</button>
+                            </div>
+                            <button class="remove-btn" onclick="removeItem(2)">Remove</button>
+                        </div>
+                    </div>
+
+                    <!-- Cart Item 3 -->
+                    <div class="cart-item" data-item-id="3">
+                        <div class="item-image">
+                            <img src="assets/images/microwave.jpg" alt="Smart Microwave" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjZjBmMGYwIi8+CjxwYXRoIGQ9Ik0zNSA2NUg2NVY0NUgzNVY2NVpNNDAgNDBINjBWMzVINDBWNDBaIiBmaWxsPSIjY2NjIi8+CjwvdXZnPgo='">
+                        </div>
+                        <div class="item-details">
+                            <h3 class="item-name">Smart Microwave Oven</h3>
+                            <p class="item-category">Home Appliances</p>
+                            <p class="item-description">WiFi-enabled microwave with app control</p>
+                            <div class="item-price">$299.99</div>
+                        </div>
+                        <div class="item-controls">
+                            <div class="quantity-controls">
+                                <button class="qty-btn" onclick="updateQuantity(3, -1)">-</button>
+                                <input type="number" class="qty-input" value="1" min="1" onchange="updateQuantity(3, this.value)">
+                                <button class="qty-btn" onclick="updateQuantity(3, 1)">+</button>
+                            </div>
+                            <button class="remove-btn" onclick="removeItem(3)">Remove</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Empty Cart State -->
+                <div id="emptyCart" class="empty-cart" style="display: none;">
+                    <div class="empty-cart-icon">🛒</div>
+                    <h2>Your cart is empty</h2>
+                    <p>Add some products to get started</p>
+                    <button class="continue-shopping-btn" onclick="window.location.href='products.html'">
+                        Continue Shopping
+                    </button>
+                </div>
+            </div>
+
+            <!-- Cart Summary -->
+            <div class="cart-summary">
+                <div class="summary-card">
+                    <h3>Order Summary</h3>
+                    
+                    <div class="summary-row">
+                        <span>Subtotal (<span id="summaryItemCount">4</span> items)</span>
+                        <span id="subtotal">$1,691.97</span>
+                    </div>
+                    
+                    <div class="summary-row">
+                        <span>Shipping</span>
+                        <span id="shipping">Free</span>
+                    </div>
+                    
+                    <div class="summary-row">
+                        <span>Tax</span>
+                        <span id="tax">$84.60</span>
+                    </div>
+                    
+                    <div class="summary-divider"></div>
+                    
+                    <div class="summary-row total">
+                        <span>Total</span>
+                        <span id="total">$1,776.57</span>
+                    </div>
+                    
+                    <div class="cart-actions">
+                        <button class="continue-shopping" onclick="window.location.href='products.html'">
+                            Continue Shopping
+                        </button>
+                        <button class="checkout-btn" onclick="proceedToCheckout()">
+                            Proceed to Checkout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    <div id="successMessage" class="success-message">
+        <span id="messageText">Item updated successfully!</span>
+    </div>
+
+    <script src="/Cart/cart.js"></script>
+</body>
+</html>

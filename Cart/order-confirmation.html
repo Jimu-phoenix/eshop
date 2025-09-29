@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation - Online Store</title>
+    <link rel="stylesheet" href="/Cart/order-confirmation.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="confirmation-header">
+            <div class="success-icon">✅</div>
+            <h1>Order Confirmed!</h1>
+            <p>Thank you for your purchase. Your order has been successfully placed.</p>
+        </header>
+
+        <!-- Order Details -->
+        <div class="confirmation-content">
+            <!-- Order Summary Card -->
+            <div class="order-details-card">
+                <div class="order-header">
+                    <h2>Order Details</h2>
+                    <div class="order-number">
+                        <span>Order #</span>
+                        <strong id="orderNumber">ORD-2024-001234</strong>
+                    </div>
+                </div>
+
+                <div class="order-info-grid">
+                    <div class="info-section">
+                        <h3>Order Date</h3>
+                        <p id="orderDate">September 28, 2024</p>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Estimated Delivery</h3>
+                        <p id="deliveryDate">October 5, 2024</p>
+                        <span class="delivery-note">5-7 business days</span>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Payment Method</h3>
+                        <p id="paymentMethod">Credit Card ending in 1234</p>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Shipping Method</h3>
+                        <p id="shippingMethod">Standard Delivery - Free</p>
+                    </div>
+                </div>
+
+                <!-- Order Items -->
+                <div class="order-items-section">
+                    <h3>Items Ordered</h3>
+                    <div class="ordered-items">
+                        <div class="ordered-item">
+                            <img src="assets/images/laptop.jpg" alt="Gaming Laptop" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjZjBmMGYwIi8+CjxwYXRoIGQ9Ik0yMCA0MEg0MFYzMEgyMFY0MFpNMjUgMjVINDVWMjBIMjVWMjVaIiBmaWxsPSIjY2NjIi8+CjwvdXZnPgo='">
+                            <div class="item-details">
+                                <h4>Gaming Laptop</h4>
+                                <p class="item-category">Electronics</p>
+                                <p class="item-quantity">Quantity: 1</p>
+                            </div>
+                            <div class="item-price">$1,299.99</div>
+                        </div>
+
+                        <div class="ordered-item">
+                            <img src="assets/images/book.jpg" alt="JavaScript Guide" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjZjBmMGYwIi8+CjxwYXRoIGQ9Ik0yMCA0MEg0MFYzMEgyMFY0MFpNMjUgMjVINDVWMjBIMjVWMjVaIiBmaWxsPSIjY2NjIi8+CjwvdXZnPgo='">
+                            <div class="item-details">
+                                <h4>JavaScript: The Complete Guide</h4>
+                                <p class="item-category">Books</p>
+                                <p class="item-quantity">Quantity: 2</p>
+                            </div>
+                            <div class="item-price">$91.98</div>
+                        </div>
+
+                        <div class="ordered-item">
+                            <img src="assets/images/microwave.jpg" alt="Smart Microwave" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjZjBmMGYwIi8+CjxwYXRoIGQ9Ik0yMCA0MEg0MFYzMEgyMFY0MFpNMjUgMjVINDVWMjBIMjVWMjVaIiBmaWxsPSIjY2NjIi8+CjwvdXZnPgo='">
+                            <div class="item-details">
+                                <h4>Smart Microwave Oven</h4>
+                                <p class="item-category">Home Appliances</p>
+                                <p class="item-quantity">Quantity: 1</p>
+                            </div>
+                            <div class="item-price">$299.99</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Total -->
+                <div class="order-total-section">
+                    <div class="total-row">
+                        <span>Subtotal (4 items)</span>
+                        <span>$1,691.97</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Shipping</span>
+                        <span>Free</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Tax</span>
+                        <span>$84.60</span>
+                    </div>
+                    <div class="total-divider"></div>
+                    <div class="total-row final">
+                        <span>Total</span>
+                        <span>$1,776.57</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delivery Information -->
+            <div class="delivery-info-card">
+                <h2>Delivery Information</h2>
+                
+                <div class="delivery-address">
+                    <h3>Shipping Address</h3>
+                    <div class="address-details">
+                        <p id="customerName">John Doe</p>
+                        <p id="streetAddress">123 Main Street</p>
+                        <p id="cityDistrict">Blantyre, Southern Region</p>
+                        <p id="phone">+265 999 123 456</p>
+                        <p id="email">john.doe@example.com</p>
+                    </div>
+                </div>
+
+                <div class="delivery-timeline">
+                    <h3>Estimated Delivery Timeline</h3>
+                    <div class="timeline">
+                        <div class="timeline-item completed">
+                            <div class="timeline-icon">✅</div>
+                            <div class="timeline-content">
+                                <h4>Order Confirmed</h4>
+                                <p>September 28, 2024</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-icon">📦</div>
+                            <div class="timeline-content">
+                                <h4>Processing</h4>
+                                <p>Expected: September 29, 2024</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-icon">🚚</div>
+                            <div class="timeline-content">
+                                <h4>Shipped</h4>
+                                <p>Expected: October 1, 2024</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-icon">🏠</div>
+                            <div class="timeline-content">
+                                <h4>Delivered</h4>
+                                <p>Expected: October 5, 2024</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="notification-info">
+                    <h3>Notifications</h3>
+                    <div class="notification-list">
+                        <div class="notification-item">
+                            <div class="notification-icon">📧</div>
+                            <p>Order confirmation sent to your email</p>
+                        </div>
+                        <div class="notification-item">
+                            <div class="notification-icon">📱</div>
+                            <p>SMS updates will be sent to your phone</p>
+                        </div>
+                        <div class="notification-item">
+                            <div class="notification-icon">🔔</div>
+                            <p>You'll receive a reminder 2 days before delivery</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="confirmation-actions">
+            <button class="track-order-btn" onclick="window.location.href='order-tracking.html'">
+                Track Your Order
+            </button>
+            <button class="continue-shopping-btn" onclick="window.location.href='products.html'">
+                Continue Shopping
+            </button>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    <div id="successMessage" class="success-message">
+        <span id="messageText">Order placed successfully!</span>
+    </div>
+
+    <script src="/Cart/order-confirmation.js"></script>
+</body>
+</html>

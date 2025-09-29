@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Online Store</title>
+    <link rel="stylesheet" href="/Cart/checkout.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="checkout-header">
+            <h1>Checkout</h1>
+            <div class="progress-steps">
+                <div class="step active">Cart</div>
+                <div class="step active">Checkout</div>
+                <div class="step">Confirmation</div>
+            </div>
+        </header>
+
+        <!-- Checkout Content -->
+        <div class="checkout-content">
+            <!-- Checkout Form -->
+            <div class="checkout-form">
+                <form id="checkoutForm">
+                    <!-- Payment Method Section -->
+                    <div class="form-section">
+                        <h3>Payment Method</h3>
+                        <div class="payment-options">
+                            <div class="payment-option">
+                                <input type="radio" id="creditCard" name="paymentMethod" value="creditCard" checked>
+                                <label for="creditCard">
+                                    <div class="payment-icon">💳</div>
+                                    <span>Credit/Debit Card</span>
+                                </label>
+                            </div>
+                            <div class="payment-option">
+                                <input type="radio" id="mobileMoney" name="paymentMethod" value="mobileMoney">
+                                <label for="mobileMoney">
+                                    <div class="payment-icon">📱</div>
+                                    <span>Mobile Money</span>
+                                </label>
+                            </div>
+                            <div class="payment-option">
+                                <input type="radio" id="bankTransfer" name="paymentMethod" value="bankTransfer">
+                                <label for="bankTransfer">
+                                    <div class="payment-icon">🏦</div>
+                                    <span>Bank Transfer</span>
+                                </label>
+                            </div>
+                            <div class="payment-option">
+                                <input type="radio" id="cashOnDelivery" name="paymentMethod" value="cashOnDelivery">
+                                <label for="cashOnDelivery">
+                                    <div class="payment-icon">💵</div>
+                                    <span>Cash on Delivery</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Details Section -->
+                    <div class="form-section" id="paymentDetails">
+                        <!-- Credit Card Details -->
+                        <div id="creditCardDetails" class="payment-details active">
+                            <h4>Card Information</h4>
+                            <div class="form-grid">
+                                <div class="form-group full-width">
+                                    <label for="cardNumber">Card Number</label>
+                                    <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
+                                    <div class="error-message" id="cardNumberError"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="expiryDate">Expiry Date</label>
+                                    <input type="text" id="expiryDate" placeholder="MM/YY" maxlength="5">
+                                    <div class="error-message" id="expiryError"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cvv">CVV</label>
+                                    <input type="text" id="cvv" placeholder="123" maxlength="3">
+                                    <div class="error-message" id="cvvError"></div>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label for="cardHolderName">Cardholder Name</label>
+                                    <input type="text" id="cardHolderName" placeholder="John Doe">
+                                    <div class="error-message" id="cardHolderError"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mobile Money Details -->
+                        <div id="mobileMoneyDetails" class="payment-details">
+                            <h4>Mobile Money Information</h4>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="mobileProvider">Provider</label>
+                                    <select id="mobileProvider">
+                                        <option value="">Select Provider</option>
+                                        <option value="airtel">Airtel Money</option>
+                                        <option value="tnm">TNM Mpamba</option>
+                                    </select>
+                                    <div class="error-message" id="providerError"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="mobileNumber">Phone Number</label>
+                                    <input type="tel" id="mobileNumber" placeholder="+265 XXX XXX XXX">
+                                    <div class="error-message" id="mobileError"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Shipping Method Section -->
+                    <div class="form-section">
+                        <h3>Shipping Method</h3>
+                        <div class="shipping-options">
+                            <div class="shipping-option">
+                                <input type="radio" id="standard" name="shippingMethod" value="standard" checked>
+                                <label for="standard">
+                                    <div class="shipping-info">
+                                        <span class="shipping-name">Standard Delivery</span>
+                                        <span class="shipping-time">5-7 business days</span>
+                                    </div>
+                                    <span class="shipping-price">Free</span>
+                                </label>
+                            </div>
+                            <div class="shipping-option">
+                                <input type="radio" id="express" name="shippingMethod" value="express">
+                                <label for="express">
+                                    <div class="shipping-info">
+                                        <span class="shipping-name">Express Delivery</span>
+                                        <span class="shipping-time">2-3 business days</span>
+                                    </div>
+                                    <span class="shipping-price">$10.00</span>
+                                </label>
+                            </div>
+                            <div class="shipping-option">
+                                <input type="radio" id="sameDay" name="shippingMethod" value="sameDay">
+                                <label for="sameDay">
+                                    <div class="shipping-info">
+                                        <span class="shipping-name">Same Day Delivery</span>
+                                        <span class="shipping-time">Within 8 hours</span>
+                                    </div>
+                                    <span class="shipping-price">$25.00</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Delivery Address Section -->
+                    <div class="form-section">
+                        <h3>Delivery Address</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="firstName">First Name</label>
+                                <input type="text" id="firstName" required>
+                                <div class="error-message" id="firstNameError"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Last Name</label>
+                                <input type="text" id="lastName" required>
+                                <div class="error-message" id="lastNameError"></div>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="streetAddress">Street Address</label>
+                                <input type="text" id="streetAddress" placeholder="123 Main Street" required>
+                                <div class="error-message" id="streetError"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="city">City</label>
+                                <input type="text" id="city" placeholder="Blantyre" required>
+                                <div class="error-message" id="cityError"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="district">District</label>
+                                <select id="district" required>
+                                    <option value="">Select District</option>
+                                    <option value="blantyre">Blantyre</option>
+                                    <option value="lilongwe">Lilongwe</option>
+                                    <option value="mzuzu">Mzuzu</option>
+                                    <option value="zomba">Zomba</option>
+                                    <option value="karonga">Karonga</option>
+                                    <option value="kasungu">Kasungu</option>
+                                    <option value="mangochi">Mangochi</option>
+                                    <option value="nsanje">Nsanje</option>
+                                </select>
+                                <div class="error-message" id="districtError"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone" placeholder="+265 XXX XXX XXX" required>
+                                <div class="error-message" id="phoneError"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" placeholder="john@example.com" required>
+                                <div class="error-message" id="emailError"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="form-actions">
+                        <button type="button" class="back-btn" onclick="window.location.href='cart.html'">
+                            Back to Cart
+                        </button>
+                        <button type="submit" class="place-order-btn">
+                            Place Order
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="order-summary">
+                <div class="summary-card">
+                    <h3>Order Summary</h3>
+                    
+                    <!-- Order Items Preview -->
+                    <div class="order-items">
+                        <div class="summary-item">
+                            <img src="assets/images/laptop.jpg" alt="Gaming Laptop" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qg3aWR0aD0iNDAiIGhlaWdodD0iNDAiIGZpbGw9IiNmMGYwZjAiLz4KPC9zdmc+'">
+                            <div class="item-info">
+                                <span class="item-name">Gaming Laptop</span>
+                                <span class="item-qty">Qty: 1</span>
+                            </div>
+                            <span class="item-price">$1,299.99</span>
+                        </div>
+                        <div class="summary-item">
+                            <img src="assets/images/book.jpg" alt="JavaScript Guide" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjZjBmMGYwIi8+PC9zdmc+'">
+                            <div class="item-info">
+                                <span class="item-name">JavaScript Guide</span>
+                                <span class="item-qty">Qty: 2</span>
+                            </div>
+                            <span class="item-price">$91.98</span>
+                        </div>
+                        <div class="summary-item">
+                            <img src="assets/images/microwave.jpg" alt="Smart Microwave" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjZjBmMGYwIi8+PC9zdmc+'">
+                            <div class="item-info">
+                                <span class="item-name">Smart Microwave</span>
+                                <span class="item-qty">Qty: 1</span>
+                            </div>
+                            <span class="item-price">$299.99</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Summary Calculations -->
+                    <div class="summary-calculations">
+                        <div class="summary-row">
+                            <span>Subtotal (4 items)</span>
+                            <span id="summarySubtotal">$1,691.97</span>
+                        </div>
+                        
+                        <div class="summary-row">
+                            <span>Shipping</span>
+                            <span id="summaryShipping">Free</span>
+                        </div>
+                        
+                        <div class="summary-row">
+                            <span>Tax</span>
+                            <span id="summaryTax">$84.60</span>
+                        </div>
+                        
+                        <div class="summary-divider"></div>
+                        
+                        <div class="summary-row total">
+                            <span>Total</span>
+                            <span id="summaryTotal">$1,776.57</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <p>Processing your order...</p>
+    </div>
+
+    <!-- Success Message -->
+    <div id="successMessage" class="success-message">
+        <span id="messageText">Form updated successfully!</span>
+    </div>
+
+    <script src="/Cart/checkout.js"></script>
+</body>
+</html>
