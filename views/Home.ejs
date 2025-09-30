@@ -1,11 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eBuy</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/landing-css/home.css">
 </head>
 <body>
-    <h1>Welcome to eBuy</h1>
+  <header class="header">
+    <nav class="nav-container">
+      <div class="logo">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <rect width="32" height="32" rx="6" fill="#4F46E5"/>
+          <path d="M16 8L20 12H12L16 8Z" fill="white"/>
+          <rect x="10" y="14" width="12" height="10" rx="1" fill="white"/>
+        </svg>
+        <span>E-Shop</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="#products">Products</a></li>
+        <li><a href="#about">About</a></li>
+        <% if (user) { %>
+          <li><a href="/products" class="btn-primary">Dashboard</a></li>
+        <% } else { %>
+          <li><a href="/auth" class="btn-primary">Login</a></li>
+        <% } %>
+      </ul>
+      <button class="mobile-menu-toggle" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Welcome to Your Favorite E-Shop</h1>
+        <p>Discover amazing products at unbeatable prices. Quality you can trust, delivered to your door.</p>
+        <div class="hero-actions">
+          <% if (user) { %>
+            <a href="/auth" class="btn-hero btn-primary">Shop Now</a>
+            <p class="welcome-text">Welcome back, <%= user.name %>!</p>
+          <% } else { %>
+            <a href="/auth" class="btn-hero btn-primary">Get Started</a>
+            <a href="#products" class="btn-hero btn-secondary">Browse Products</a>
+          <% } %>
+        </div>
+      </div>
+      <div class="hero-image">
+        <div class="placeholder-image">
+          <svg viewBox="0 0 400 300" fill="none">
+            <rect width="400" height="300" fill="#E0E7FF"/>
+            <circle cx="200" cy="150" r="60" fill="#4F46E5" opacity="0.2"/>
+            <rect x="140" y="100" width="120" height="100" rx="8" fill="#4F46E5" opacity="0.3"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <section class="features" id="products">
+      <h2>Why Choose Us?</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🚚</div>
+          <h3>Fast Delivery</h3>
+          <p>Get your orders delivered quickly and safely to your doorstep.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💎</div>
+          <h3>Premium Quality</h3>
+          <p>Only the best products from trusted brands and suppliers.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔒</div>
+          <h3>Secure Payment</h3>
+          <p>Shop with confidence using our secure payment system.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💬</div>
+          <h3>24/7 Support</h3>
+          <p>Our customer service team is always here to help you.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta" id="about">
+      <div class="cta-content">
+        <h2>Ready to Start Shopping?</h2>
+        <p>Join thousands of satisfied customers and discover a new way to shop online.</p>
+        <% if (!user) { %>
+          <a href="/auth" class="btn-hero btn-primary">Create Your Account</a>
+        <% } %>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>E-Shop</h4>
+        <p>Your trusted online marketplace for quality products.</p>
+      </div>
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#products">Products</a></li>
+          <li><a href="#about">About Us</a></li>
+          <li><a href="/auth">Login</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Contact</h4>
+        <p>Email: support@eshop.com</p>
+        <p>Phone: 0123456789</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 E-Shop. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script type="module" src="/landing-js/home.js"></script>
 </body>
 </html>

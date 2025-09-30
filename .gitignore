@@ -1,3 +1,7 @@
 node_modules
-prompt.txt
-Project Description.docx
+*.txt
+*.docx
+.env
+/public/images
+*.html
+*Test*
