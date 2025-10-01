@@ -4,74 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit</title>
+    <link rel="stylesheet" href="/css/form.css">
 </head>
 <body>
    
     <form id="myform">
-        <label for="pId">Id:</label>
-        <input type="number" name="pId" id="pId" value=<%= Number.parseInt(productId) %> readonly>
+        <input type="number" name="pId" id="pId" value=<%= Number.parseInt(productId) %> readonly hidden>
+       
         <label for="name">Name:</label>
         <input type="text" name="name" id="pname" value="<%= product.name %>" placeholder="eg kettle" required>
+       
         <label for="price">Price:</label>
         <input type="number" name="price" id="price" value="<%= product.price %>" placeholder="eg 5000" required>
+      
         <label for="description">Description:</label>
         <textarea name="description" id="description"><%= product.des %></textarea>
-        <button type="submit" id="sub">Add</button>
         
-
+        <a href="/products" class="btn-primary">Cancel</a>
+        <button type="submit">Add</button>
+        
     </form>
 
 
-     <% let test = productId
-        console.log("Id: ",test) %>
-    <h1 style="color: black;"><%= productId %></h1>
+
 
     <h2 id="result"></h2>
 
 </body>
 
-<script>
-
-     const postData = async (pid, pname, description, proPrice) => {
-            const res = await fetch(`http://localhost:7000/update/${pid}`, {
-                method: 'POST',
-                headers: {'Content-Type' : 'application/json'},
-                body: JSON.stringify({
-                    name: pname,
-                    desc: description,
-                    price: proPrice,
-                    img: ""
-                })
-            })
-            const data = await res.json();
-            console.log(data)
-            let response = document.getElementById('result')
-            response.innerText = `${data.message} Redirecting...`
-            
-            setTimeout(()=> {
-                window.location.replace("http://localhost:7000/products");
-            }, 2000)
-
-            return data;
-        }
-
-        document.getElementById('myform').addEventListener('submit', (e)=>{
-            e.preventDefault();
-
-            
-            let postId = Number.parseInt(e.target.pId.value)
-            console.log(postId)
-            let pname = e.target.name.value
-            let price = e.target.price.value
-            let description = e.target.description.value
-
-            let res = postData(postId, pname, description, price)
-            if(res.message == "Product Updated"){
-                console.log("Updated!")
-            }
-        })
-
-
-</script>
+<script src="/edit.js"></script>
 
 </html>

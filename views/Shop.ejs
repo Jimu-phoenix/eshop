@@ -3,12 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Shop</title>
+    <link rel="stylesheet" href="/css/shop.css">
 </head>
 <body>
-    <h1>Welcome to the shop</h1>
+
+  <%- include('partials/confirm') %>
+  <%- include('partials/checkout') %>
+
+    <header class="header">
+    <nav class="nav-container">
+      <div class="logo">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <rect width="32" height="32" rx="6" fill="#4F46E5"/>
+          <path d="M16 8L20 12H12L16 8Z" fill="white"/>
+          <rect x="10" y="14" width="12" height="10" rx="1" fill="white"/>
+        </svg>
+        <span>E-Shop</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="/home">Home</a></li>
+        <li><a href="#products">About</a></li>
+        
+          <li><a href="#logout" class="primary logout" id="nav-btn" >Logout</a></li>
+          <!-- <li><button id="logout" class="btn-primary">Logout</button></li> -->
+
+      </ul>
+      <button class="mobile-menu-toggle" aria-label="Toggle menu">
+         <ul class="nav-links">
+        <li><a href="/home">Home</a></li>
+        <li><a href="#products">About</a></li>
+        
+          <li><a href="#logout" class="primary logout" id="nav-btn" >Logout</a></li>
+          <!-- <li><button id="logout" class="btn-primary">Logout</button></li> -->
+
+      </ul>
+      </button>
+    </nav>
+  </header>
+
+    <div class="top">
+            <div class="cart-container">
+                <button id="opencart">View Cart</button>
+
+                <section class="cart">
+                    <form id="cart">
+                      <button type="button" id="close">Close</button>
+                    </form>
+                </section>
+            </div>
+        <h1>Welcome to the shop, <%= user.name %></h1>
+
+    </div>
+    
+    <p id="data" data-cart-id="<%= nec.cart %>"
+                 data-user-id="<%= user.id %>"
+                 data-products="<%= nec.products %>"></p>
+
+   <div class="products-container">
+     <% nec.products.forEach(element => { %>
+    <div class="product-card">
+        <img src="/images/<%= element.image %>" alt="<%= element.name %> image" width="100">
+        <h2><%= element.name %></h2>
+        <p class="desc"><%= element.des %></p>
+        <p class="price">MK <%= element.price %></p>
+        <p class="quantity">Remaining: <%= element.quantity %></p>
+        
+
+         <form class="hiddenForm">
+        <input type="number" name="productId" value="<%= element.id %>" hidden>
+        <input type="number" name="userId" value="<%= user.id %>" hidden>
+        <input type="number" name="cartId" value="<%= nec.cart || 0 %>" hidden>
+        <button type="submit" 
+                class="add-to-cart <%= element.quantity > 0 ? 'available' : 'sold-out' %>"
+                data-product-id="<%= element.id %>"
+                data-user-id="<%= user.id %>"
+                data-cart-id="<%= nec.cart %>"
+                <%= element.quantity > 0 ? '' : 'disabled' %>>
+            <%= element.quantity > 0 ? 'Add To Cart' : 'Sold Out' %>
+        </button>
+    </form>
+
+    </div>
+
+   
+<% }) %> 
+   </div>
+
+
+
+
+<button id="logout">Logout</button>
+
+<%- include('partials/footer') %>
+
 </body>
 
-<script src="count.js"></script>
+<script src="/shopScript.js"></script>
 
 </html>

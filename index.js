@@ -7,7 +7,8 @@ const bcrypt = require('bcrypt');
 const helmet = require('helmet');
 const cors = require("cors")
 const multer = require('multer')
-const path = require('path')
+const path = require('path');
+const { title } = require('process');
 const SALT_ROUNDS = 12;
 
 
@@ -46,7 +47,23 @@ console.log("Connected Successfully")
 const sessionStore = new MySQLStore(dbOptions);
 
 const app = express();
-app.use(helmet()); 
+app.use(express.static('public'));
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "https://cdn.jsdelivr.net"],
+      styleSrc: ["'self'", "'unsafe-inline'"], 
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'"],
+      fontSrc: ["'self'"],
+      objectSrc: ["'none'"],
+      mediaSrc: ["'self'"],
+      frameSrc: ["'none'"],
+    },
+  },
+  crossOriginEmbedderPolicy: false // May be needed for some external resources
+})); 
 app.use(express.urlencoded({ extended: true })); 
 app.use(express.json());
 
@@ -54,7 +71,7 @@ app.use(cors());
 app.set("view engine", "ejs");
 
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'));
+
 
 
 app.use(session({
@@ -64,16 +81,30 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    httpOnly: true,          // prevents JS access
-    secure: false,            // only send over HTTPS
-    sameSite: 'lax',         // helps prevent CSRF
-    maxAge: 1000 * 60 * 60   // 1 hour
+    httpOnly: true,          
+    secure: false,           
+    sameSite: 'lax',         
+    maxAge: 1000 * 60 * 60   
   }
 }));
 
-
+// Render Routes
 app.get('/home', (req, res)=>{
-    res.render("home");
+    if (req.session.userId){
+      res.render('home', {
+        title: 'eShop',
+        user: {
+          id: req.session.userId,
+          name: req.session.username
+        }
+      })
+    }
+    else{
+      res.render("home", {
+        title: 'eShop',
+        user: ''
+      });
+    }
 })
 app.get('/test', (req, res) => {
     res.render('test')
@@ -85,10 +116,251 @@ app.get('/preview/:img', (req, res)=>{
 app.get('/auth', (req, res) => {
     res.render('auth')
 })
-app.get('/shop', requireCustomer, (req, res)=>{
-    res.render('shop', {user: "Customer"})
+
+app.get('/shop', requireCustomer, async (req, res)=>{
+    const sql = "SELECT * FROM PRODUCTS;"
+    try {
+      const [rows] = await pool.execute(sql);
+      try {
+         const [cartRows] = await pool.execute("SELECT id FROM cart WHERE owner = (?)", [req.session.userId]);
+          console.log("Cartrows:", cartRows)
+          let cartId = 0;
+          if (cartRows.length > 0 && cartRows[0] && cartRows[0].id != null) {
+            cartId = cartRows[0].id;
+            console.log("Cartrows:", cartId);
+          } else {
+            cartId = 0;
+            console.log("No cart found for user, using cartId = 0");
+          }
+          const  sentNec = {
+              products: rows,
+              cart: cartId
+            }
+
+            console.log("Nec:", sentNec)
+          res.render('shop', {
+            user: {
+              name: req.session.username,
+              id: req.session.userId
+            },
+            nec: sentNec
+          });
+      }
+       catch (error) {
+        res.render('404', { return : '/shop', 
+        error: "The term you searched for was not found"})
+      }
+      // res.render('shop', {
+      //   user: req.session.username,
+      //   userID: req.session.userId,
+      //   products: rows
+      // })
+    } catch (error) {
+      res.render('404', { return : '/shop', 
+      error: "The term you searched for was not found"})
+    }
 })
 
+app.post('/buy', async (req, res) => {
+    const { theUser, theCart } = req.body;
+    
+    if (!theUser || !theCart) {
+        return res.status(400).send({ message: "User ID and Cart ID are required" });
+    }
+
+    const connection = await pool.getConnection();
+    
+    try {
+        await connection.beginTransaction();
+
+        // Verify cart ownership
+        const [cartCheck] = await connection.execute(
+            'SELECT * FROM cart WHERE id = ? AND owner = ?',
+            [theCart, theUser]
+        );
+        
+        if (cartCheck.length === 0) {
+            await connection.rollback();
+            return res.status(403).send({ message: "Cart does not belong to user" });
+        }
+
+        // Get cart products
+        const [prods] = await connection.execute('SELECT product_Id FROM cart_product WHERE cart_Id = (?)', [theCart]);
+
+        if (prods.length === 0) {
+            await connection.rollback();
+            return res.status(400).send({ message: "Cart is empty" });
+        }
+
+        // Process each product
+        for (const el of prods) {
+            const [result] = await connection.execute('SELECT quantity FROM products WHERE id = (?)', [el.product_Id]);
+            
+            if (result.length === 0) {
+                await connection.rollback();
+                return res.status(404).send({ message: `Product ${el.product_Id} not found` });
+            }
+            
+            const currentQuantity = result[0].quantity;
+            const newQ = currentQuantity - 1;
+            
+            if (newQ < 0) {
+                await connection.rollback();
+                return res.status(400).send({ 
+                    message: `Insufficient quantity for product ${el.product_Id}` 
+                });
+            }
+            
+            await connection.execute('UPDATE products SET quantity = (?) WHERE id = (?)', [newQ, el.product_Id]);
+        }
+
+        // Clear cart
+        await connection.execute('DELETE FROM cart_product WHERE cart_Id = (?)', [theCart]);
+
+        await connection.commit();
+
+        res.status(200).send({ 
+            success: true,
+            message: "Purchase successful!",
+            itemsPurchased: prods.length
+        });
+
+    } catch (error) {
+        await connection.rollback();
+        console.error('Purchase error:', error);
+        res.status(500).send({ 
+            success: false,
+            message: "Purchase failed: " + error.message 
+        });
+    } finally {
+        connection.release();
+    }
+});
+
+
+// Get Cart
+// Add this route to your index.js file
+app.get('/cart/products/:cartId', requireCustomer, async (req, res) => {
+    const { cartId } = req.params;
+    
+    try {
+        // First verify the cart belongs to the logged-in user
+        const [cartCheck] = await pool.execute(
+            'SELECT * FROM cart WHERE id = ? AND owner = ?',
+            [cartId, req.session.userId]
+        );
+        
+        if (cartCheck.length === 0) {
+            return res.status(403).json({ 
+                error: 'Access denied: Cart does not belong to user' 
+            });
+        }
+
+        // Get all products in the cart with their details
+        const [cartProducts] = await pool.execute(`
+            SELECT 
+                p.id,
+                p.name, 
+                p.price, 
+                p.quantity as product_quantity,
+                p.image,
+                p.des,
+                cp.cart_Id,
+                cp.product_Id
+            FROM cart_product cp
+            INNER JOIN products p ON cp.product_Id = p.id
+            WHERE cp.cart_Id = ?
+        `, [cartId]);
+
+        res.send({
+            success: true,
+            cartId: cartId,
+            products: cartProducts
+        });
+
+    } catch (error) {
+        console.error('Error fetching cart products:', error);
+        res.status(500).json({ 
+            error: 'Server error while fetching cart products' 
+        });
+    }
+});
+
+// Add product to cart
+app.post('/cart/add', requireCustomer, async (req, res) => {
+    const { productId, userId, cartId } = req.body;
+
+    // Validate input
+    if (!productId || !userId) {
+        return res.status(400).json({ 
+            success: false, 
+            error: 'Product ID and User ID are required' 
+        });
+    }
+
+    try {
+        let actualCartId = cartId;
+        
+        // If no cartId provided, check if user has an existing cart
+        if (!actualCartId || actualCartId === 0) {
+            const [existingCart] = await pool.execute(
+                'SELECT id FROM cart WHERE owner = ?',
+                [userId]
+            );
+            
+            if (existingCart.length > 0) {
+                // Use existing cart
+                actualCartId = existingCart[0].id;
+            } else {
+                // Create new cart for user
+                const [newCart] = await pool.execute(
+                    'INSERT INTO cart (owner) VALUES (?)',
+                    [userId]
+                );
+                actualCartId = newCart.insertId;
+                console.log('Created new cart with ID:', actualCartId);
+            }
+        }
+
+        // Check if product already exists in cart
+        const [existingProduct] = await pool.execute(
+            'SELECT * FROM cart_product WHERE cart_Id = ? AND product_Id = ?',
+            [actualCartId, productId]
+        );
+
+        if (existingProduct.length > 0) {
+            return res.json({
+                success: true,
+                message: 'Product already in cart',
+                cartId: actualCartId,
+                action: 'exists'
+            });
+        }
+
+        // Add product to cart
+        const [result] = await pool.execute(
+            'INSERT INTO cart_product (cart_Id, product_Id) VALUES (?, ?)',
+            [actualCartId, productId]
+        );
+
+        res.json({
+            success: true,
+            message: 'Product added to cart successfully',
+            cartId: actualCartId,
+            action: 'added',
+            insertId: result.insertId
+        });
+
+    } catch (error) {
+        console.error('Error adding to cart:', error);
+        res.status(500).json({ 
+            success: false, 
+            error: 'Server error while adding to cart' 
+        });
+    }
+});
+
+// Session Roles
 function requireAuth(req, res, next) {
   if (req.session.userId) return next();
   res.render('nonAuth', { message: 'Unauthorized, Please Login!'});
@@ -96,49 +368,45 @@ function requireAuth(req, res, next) {
 
 function requireAdmin(req, res, next) {
   if (req.session.role === 'admin') return next();
-  res.status(403).send('Access denied: admins only');
+  res.redirect('/auth')
 }
 
 function requireCustomer(req, res, next) {
   if (req.session.role == 'customer') {
     console.log(req.session.role)
-    return next()};
-  res.status(403).send('Access denied: Customers only');
+    return next()
+  };
+  res.redirect('/auth')
 }
-
+// ====================================================================
 // login route
 app.post('/auth/login', async (req, res) => {
   const { username, password } = req.body;
 
-  // 1. Validate input
-  if (!username || !password) return res.status(400).send('Username and password required');
+  if (!username || !password) return res.status(400).send({ message: 'Username and password required'});
 
   try {
-    // 2. Fetch user from DB
     const [rows] = await pool.execute('SELECT id, password, role FROM users WHERE username = ?', [username]);
-    if (!rows.length) return res.status(401).send('Invalid credentials');
+    if (!rows.length) return res.status(401).send({message: 'Invalid credentials'});
 
     const user = rows[0];
 
-    // 3. Compare password using bcrypt
     const match = await bcrypt.compare(password, user.password);
     console.log(await bcrypt.hash(password, SALT_ROUNDS))
-    if (!match) return res.status(401).send('Invalid credentials');
+    if (!match) return res.status(401).send({message: 'Invalid credentials'});
 
-    // 4. Regenerate session to prevent fixation
     req.session.regenerate(err => {
-      if (err) return res.status(500).send('Server error');
+      if (err) return res.status(500).send({message: 'Server error'});
 
-      // 5. Store minimal user info in session
       req.session.userId = user.id;
       req.session.username = username;
       req.session.role = user.role
 
+      console.log(req)
       console.log(req.session.role)
 
-      // 6. Save session explicitly (optional)
       req.session.save(err => {
-        if (err) return res.status(500).send('Server error');
+        if (err) return res.status(500).send({message: 'Server error'});
         if(req.session.role === 'admin'){
             res.send({dest: 'products'})
         }
@@ -150,7 +418,7 @@ app.post('/auth/login', async (req, res) => {
 
   } catch (err) {
     console.error(err);
-    res.status(500).send('Server error');
+    res.status(500).send({message: 'Server error'});
   }
 });
 //---------------------------------------------------------------------
@@ -159,19 +427,16 @@ app.post('/auth/login', async (req, res) => {
 app.post('/register', async (req, res) => {
   const { firstname, lastname, username, email, password } = req.body;
 
-  // 1. Validate input
   if (!username || !password) {
     return res.status(400).send('Username and password required');
   }
 
   try {
-    // 2. Hash the password
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
-    // 3. Save user to DB (use parameterized queries to prevent SQL injection)
     await pool.execute(
       'INSERT INTO users (firstname, lastname, username, email, password, role) VALUES (?, ?, ?, ?, ?, ?)',
-      [firstname, lastname, username, email, hashedPassword, 'admin']
+      [firstname, lastname, username, email, hashedPassword, 'customer']
     );
 
     res.send('Registration successful! You can now log in.');
@@ -194,7 +459,6 @@ app.get('/dashboard', requireAuth, (req, res) => {
 
 app.get('/delete/:id', async (req, res)=>{
     const { id } = req.params;
-    // console.log(id)
     
     if (!id || id === undefined){
         res.render('404', { return : '/products', 
@@ -212,25 +476,11 @@ app.get('/delete/:id', async (req, res)=>{
                 // console.log(data);
                 res.render('delete', data);
         }
-        // conn.query(sql, [id], (err, result) => {
-        // if(err || !id || id === undefined){
-        //     res.render('404', { return : '/products', 
-        //     error: "The product you searched for was not found"})
-        // }
-        // else if(result.length === 0){
-        //          res.render('404', { backPage : '/products', 
-        //          error: "The product you searched for was not found"})
-        //     }
-        //     else{
-                
-        //     }
-            
-        // })
     }
 })
 
 //delete products
-app.delete('/deleteProduct/:id', (req, res) => {
+app.delete('/deleteProduct/:id', async (req, res) => {
     const { id } = req.params;
 
     if(id === undefined){
@@ -241,22 +491,13 @@ app.delete('/deleteProduct/:id', (req, res) => {
     const sql = 'DELETE FROM products WHERE id = (?);'
    try {
     
-     conn.query(sql, [id], (err, result)=>{
-        if(err){
-            res.render('404', {
-                backPage: '/products',
-                error: 'Database Error'
-            })
-        }
-        else{
-            console.log("rows:", result.affectedRows)
-            console.log("Result: ", result)
-            res.status(200).send({ result })
-        }
-     })
+    const {result} = await pool.execute(sql, [id]);
+
+    res.status(200).send({ result })
 
    } catch (error) {
     console.log(error)
+    res.status(500).send({error})
    }
     
 })
@@ -313,8 +554,8 @@ app.get('/customerProducts', requireCustomer, async (req, res) => {
 
 // add product
 // add product
-app.post('/addProduct', upload.single('image'), (req, res) => {
-    let { id, name, desc, price, filename } = req.body;
+app.post('/addProduct', upload.single('image'), async (req, res) => {
+    let { id, name, desc, price, quantity, filename } = req.body;
     
     // Check if file was uploaded
     if (!req.file) {
@@ -323,55 +564,64 @@ app.post('/addProduct', upload.single('image'), (req, res) => {
     
     const imageFilename = req.file.filename;
     
-    console.log("Id:", id, "name: ", name, "desc: ", desc, "price: ", price, "Filename: ", imageFilename);
-    const sql = "INSERT INTO products (id, name, des, price, image) VALUES (?, ?, ?, ?, ?)"
+    try {
+          console.log("Id:", id, "name: ", name, "desc: ", desc, "price: ", price, "Q: ", quantity, "Filename: ", imageFilename);
+          const sql = "INSERT INTO products (id, name, des, price, quantity, image) VALUES (?, ?, ?, ?, ?, ?)"
+          const {result} = await pool.execute(sql, [id, name, desc, price, quantity, imageFilename]);
+          return res.status(201).json({ message: "Added!" });
+    } catch (err) {
+          console.error('Database error:', err);
+          return res.status(500).json({ message: 'Error adding product to database' });
+    }
 
-    conn.query(sql, [id, name, desc, price, imageFilename], (err, result) => {
-         if (err) {
-            console.error('Database error:', err);
-            return res.status(500).json({ message: 'Error adding product to database' });
-        }
-        else{
-            return res.status(201).json({ message: "Added!" });
-        }
     });
-})
+
 // Edit product
-app.get('/editProduct/:id', (req, res)=>{
+app.get('/editProduct/:id', async (req, res)=>{
     const { id } = req.params;
+    const fixedId = Number.parseInt(id);
+
+    console.log(fixedId, typeof fixedId)
     let sql = "SELECT * FROM products WHERE id = (?);";
-    conn.query(sql, [id], (err, result) => {
-        if(err){
-            console.log("Query Error: ", err);
-            res.render('edit', { product: {}, message: "Error Getting Product" });
-        }
-        else{
-            console.log(result[0])
-            res.render('edit', { product: result[0], productId: result[0].id, message: "" });
-        }
-    })
+    const [result] = await pool.execute(sql, [fixedId]);
+    if(result.length > 0){
+       res.render('edit', { product: result[0], productId: result[0].id, message: "" });
+    }
+    else{
+      console.log("Query Error: ", result);
+      res.render('edit', { product: {}, productId: 0, message: "Error Getting Product" });
+    }
+    
 })
 
 //update
-app.post('/update/:id', (req, res)=>{
-    const { id } = req.params;
+app.post('/update', async (req, res)=>{
+    const { id, name, desc, price,} = req.body
     console.log(id)
-    const { name, desc, price, img } = req.body
     if(!name || !price || !desc){
-        console.log("Id:", pId, "name:", name, "des:", desc, "price:", price, img)
+        console.log("Id:", pId, "name:", name, "des:", desc, "price:", price)
         res.status(400).send({ message: "All fields are required"})
     }
-    else{
-        const sql = "UPDATE products SET name = (?), price = (?), des = (?) WHERE id = (?);"
-        conn.query(sql, [name, price, desc, id], (err, result)=>{
-            if(err){
-                 res.status(500).send({ message: "Query Error"})
-            }
-            else{
-                res.status(200).send({ message: "Product Updated" })
-            }
-        })
+    
+
+    try {
+      const sql = "UPDATE products SET name = (?), price = (?), des = (?) WHERE id = (?);"
+      const {result} = await pool.execute(sql,[name, price, desc, id]);
+      console.log("Result: ",result)
+      res.status(200).send({ message: "Product Updated" })
+    } catch (error) {
+        res.status(500).send({ message: `Query Error${error}`})
     }
+
+        
+        // if(result){
+        //   console.log(result)
+        //   res.status(200).send({ message: "Product Updated" })
+        // }
+        // else{
+        // }
+       
+    
 })
 
 
@@ -403,6 +653,39 @@ app.post('/addView', async (req, res) =>{
     }
 })
 
+app.post('/addView/home', async (req, res) =>{
+    const {view} = req.body;
+    if(view){
+        try {
+            const [rows] = await pool.execute('SELECT home FROM views')
+            let newViews = rows[0].home + 1;
+            await pool.execute('UPDATE views SET home = (?) WHERE id = 1', [newViews]);
+
+            res.send({message: 'added'})
+        } catch (error) {
+            res.send({error})
+        }
+    }
+})
+
+app.get('/getViews', async (req, res)=>{
+  try {
+    
+    const [results] = await pool.execute('SELECT * FROM views WHERE id = 1');
+    if(results){
+      res.status(200).send({views: results})
+    }
+    else{
+    res.status(500).send({message: "No results Found"})
+    }
+
+  } catch (error) {
+    res.status(500).send({message: error})
+  }
+})
+
+
+
 app.post('/logout', (req, res) => {
   req.session.destroy(err => {
     res.clearCookie('session_id'); 
@@ -417,7 +700,7 @@ app.listen(PORT, ()=>{
 })
 
 
-let test = "30"
-test.toLowerCase()
-Number.parseInt(test)
-console.log(test)
+// let test = "30"
+// test.toLowerCase()
+// Number.parseInt(test)
+// console.log(test)

@@ -1,0 +1,241 @@
+<link rel="stylesheet" href="/css/checkout.css">
+<style>
+    .check-cover{
+        position: absolute;
+        background-color: black;
+        width: 100vw;
+        height: 100vh;
+        display: none;
+        justify-content: center;
+        align-items: center;
+    }
+    .container {
+    max-width: 600px;
+    height: 500px;
+    margin: 0 auto;
+    /* border: 1px solid black; */
+    border-radius: .5rem;
+    padding: 1rem .75rem;
+    background-color: rgb(246, 253, 255);
+}
+.container::before{
+    content: "";
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+    opacity: .8;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .75rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full-width {
+    grid-column: span 2;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 90%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    transition: all 0.2s;
+    background: var(--surface);
+}
+.form-section{
+    height: 400px;
+    padding-top: 0;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.error-message {
+    color: var(--danger);
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+    min-height: 18px;
+}
+
+/* Shipping Options */
+.shipping-options {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.shipping-option input[type="radio"] {
+    display: none;
+}
+
+.shipping-option label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border: 2px solid var(--border);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--surface);
+}
+
+.shipping-option input[type="radio"]:checked + label {
+    border-color: var(--primary);
+    background: rgba(79, 70, 229, 0.05);
+}
+
+.shipping-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.shipping-name {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.shipping-time {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.shipping-price {
+    font-weight: 700;
+    color: var(--secondary);
+    font-size: 1rem;
+}
+.or{
+    margin-left: 70%;
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 1rem;
+    margin-right: 2.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+}
+
+.back {
+    background: var(--surface);
+    color: var(--text-primary);
+    border: 2px solid var(--border);
+    padding: 0.5rem .75rem;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.back:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.place-order {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 0.5rem .75rem;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.place-order:hover {
+    background: var(--primary-dark);
+}
+
+.place-order:disabled {
+    background: var(--text-secondary);
+    cursor: not-allowed;
+}
+
+</style>
+<form class="check-cover">
+
+    <div class="container">
+        <div class="form-section">
+            <h3>Delivery Address</h3>
+            <div class="form-grid">
+                <div class="form-group full-width">
+                    <label for="streetAddress">Street Address</label>
+                    <input type="text" name="input1" id="streetAddress" placeholder="123 Main Street" required>
+                    <div class="error-message" id="streetError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="city">City <span class="or">Or</span></label>
+                    <input type="text" name="input2" id="city" placeholder="Blantyre" required>
+                    <div class="error-message" id="cityError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="district">District</label>
+                    <select id="district" required>
+                        <option value="">Select District</option>
+                        <option value="blantyre">Blantyre</option>
+                        <option value="lilongwe">Lilongwe</option>
+                        <option value="mzuzu">Mzuzu</option>
+                        <option value="zomba">Zomba</option>
+                        <option value="karonga">Karonga</option>
+                        <option value="kasungu">Kasungu</option>
+                        <option value="mangochi">Mangochi</option>
+                        <option value="nsanje">Nsanje</option>
+                    </select>
+                    <div class="error-message" id="districtError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" name="input3" id="phone" placeholder="+265 XXX XXX XXX" required>
+                    <div class="error-message" id="phoneError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" name="input4" id="email" placeholder="john@example.com" required>
+                    <div class="error-message" id="emailError"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="button" class="back" onclick="window.location.href='cart.html'">
+                Back to Cart
+            </button>
+            <button type="submit" class="place-order" id="place-order">
+                Place Order
+            </button>
+        </div>
+    
+</div>
+
+</form>

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= title %></title>
-  <link rel="stylesheet" href="/landing-css/home.css">
+  <link rel="stylesheet" href="/css/home.css">
 </head>
 <body>
   <header class="header">
@@ -18,13 +18,12 @@
         <span>E-Shop</span>
       </div>
       <ul class="nav-links">
-        <li><a href="/">Home</a></li>
-        <li><a href="#products">Products</a></li>
-        <li><a href="#about">About</a></li>
+        <li><a href="/home">Home</a></li>
+        <li><a href="#products">About</a></li>
         <% if (user) { %>
-          <li><a href="/products" class="btn-primary">Dashboard</a></li>
+          <li><a href="/shop" class="btn-primary" id="nav-btn" >Go to Shop</a></li>
         <% } else { %>
-          <li><a href="/auth" class="btn-primary">Login</a></li>
+          <li><a href="/auth" class="btn-primary" id="nav-btn">Login</a></li>
         <% } %>
       </ul>
       <button class="mobile-menu-toggle" aria-label="Toggle menu">
@@ -42,21 +41,17 @@
         <p>Discover amazing products at unbeatable prices. Quality you can trust, delivered to your door.</p>
         <div class="hero-actions">
           <% if (user) { %>
-            <a href="/auth" class="btn-hero btn-primary">Shop Now</a>
+            <a href="/shop" class="btn-hero btn-primary">Shop Now</a>
             <p class="welcome-text">Welcome back, <%= user.name %>!</p>
           <% } else { %>
             <a href="/auth" class="btn-hero btn-primary">Get Started</a>
-            <a href="#products" class="btn-hero btn-secondary">Browse Products</a>
+            <a href="#about" class="btn-hero btn-secondary">Browse Products</a>
           <% } %>
         </div>
       </div>
       <div class="hero-image">
-        <div class="placeholder-image">
-          <svg viewBox="0 0 400 300" fill="none">
-            <rect width="400" height="300" fill="#E0E7FF"/>
-            <circle cx="200" cy="150" r="60" fill="#4F46E5" opacity="0.2"/>
-            <rect x="140" y="100" width="120" height="100" rx="8" fill="#4F46E5" opacity="0.3"/>
-          </svg>
+        <div class="image">
+          <img src="/images/homePage.gif" alt="Shopping">
         </div>
       </div>
     </section>
@@ -76,8 +71,8 @@
         </div>
         <div class="feature-card">
           <div class="feature-icon">🔒</div>
-          <h3>Secure Payment</h3>
-          <p>Shop with confidence using our secure payment system.</p>
+          <h3>Cash on Delivery Payment</h3>
+          <p>Shop with confidence and pay when you recieve your goods</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">💬</div>
@@ -108,15 +103,14 @@
         <h4>Quick Links</h4>
         <ul>
           <li><a href="/">Home</a></li>
-          <li><a href="#products">Products</a></li>
-          <li><a href="#about">About Us</a></li>
+          <li><a href="#products">About Us</a></li>
           <li><a href="/auth">Login</a></li>
         </ul>
       </div>
       <div class="footer-section">
         <h4>Contact</h4>
         <p>Email: support@eshop.com</p>
-        <p>Phone: 0123456789</p>
+        <p>Phone: +265 884 560 736</p>
       </div>
     </div>
     <div class="footer-bottom">
@@ -124,6 +118,6 @@
     </div>
   </footer>
 
-  <script type="module" src="/landing-js/home.js"></script>
+  <script type="module" src="/home.js"></script>
 </body>
 </html>

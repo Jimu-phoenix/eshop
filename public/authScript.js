@@ -70,11 +70,11 @@
                        console.log(result)
                     }, 1000);
                 } else {
-                    showMessage('loginMessage', 'Login failed', 'error');
+                    showMessage('loginMessage', result.message || 'Login failed', 'error');
                 }
             } catch (error) {
                 console.error('Login error:', error);
-                showMessage('loginMessage', 'Network error. Please try again.', 'error');
+                showMessage('loginMessage', result.message || 'Network error. Please try again.', 'error');
             } finally {
                 loginBtn.disabled = false;
                 showLoading('loginLoading', false);
@@ -104,7 +104,6 @@
                 
                 console.log(response)
 
-                // const result = await response.json();
 
 
                 

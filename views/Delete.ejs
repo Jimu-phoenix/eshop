@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Delete Product</title>
     <style>
-        /* Your existing CSS remains the same */
         * {
             margin: 0;
             padding: 0;
@@ -161,6 +160,7 @@
     </style>
 </head>
 <body>
+    <p id="data" data_id="<%= id %>"></p>
     <div class="container">
         <div class="header">
             <h1>Delete Product</h1>
@@ -200,67 +200,8 @@
         </div>
     </div>
 
-    <script>
-        // Get the product ID from the EJS template
-        const productId = '<%= id %>';
+    <script src="/delete.js" type="">
         
-        // Delete product function
-        const deleteProduct = async (id) => {
-            const messageEl = document.getElementById('message');
-            const loadingEl = document.getElementById('loading');
-            const deleteBtn = document.getElementById('delete-btn');
-            
-            // Show loading indicator
-            loadingEl.style.display = 'block';
-            deleteBtn.disabled = true;
-            messageEl.style.display = 'none';
-            
-            try {
-                // Send DELETE request with the product ID in the URL
-                const response = await fetch(`/deleteProduct/${id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-                
-                const data = await response.json();
-                
-                // Hide loading indicator
-                loadingEl.style.display = 'none';
-                
-                if (response.ok) {
-                    // Success
-                    messageEl.textContent = data.message || 'Product deleted successfully!';
-                    messageEl.className = 'message success';
-                    messageEl.style.display = 'block';
-                    
-                    // Redirect to products page after 2 seconds
-                    setTimeout(() => {
-                        window.location.href = '/products';
-                    }, 2000);
-                } else {
-                    // Error from server
-                    messageEl.textContent = data.error || 'Error deleting product';
-                    messageEl.className = 'message error';
-                    messageEl.style.display = 'block';
-                    deleteBtn.disabled = false;
-                }
-            } catch (error) {
-                // Network error
-                console.error('Error:', error);
-                loadingEl.style.display = 'none';
-                messageEl.textContent = 'Network error. Please try again.';
-                messageEl.className = 'message error';
-                messageEl.style.display = 'block';
-                deleteBtn.disabled = false;
-            }
-        };
-        
-        // Add event listener to delete button
-        document.getElementById('delete-btn').addEventListener('click', () => {
-            deleteProduct(productId);
-        });
     </script>
 </body>
 </html>

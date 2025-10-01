@@ -3,10 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' https://cdn.jsdelivr.net;">
     <title><%= title %></title>
-    <link rel="stylesheet" href="product.css">
+    <link rel="stylesheet" href="/css/product.css">
+    
 </head>
 <body>
+
+    <header class="header">
+    <nav class="nav-container">
+      <div class="logo">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <rect width="32" height="32" rx="6" fill="#4F46E5"/>
+          <path d="M16 8L20 12H12L16 8Z" fill="white"/>
+          <rect x="10" y="14" width="12" height="10" rx="1" fill="white"/>
+        </svg>
+        <span>E-Shop</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="/home">Home</a></li>
+        <li><a href="#products">About</a></li>
+        
+            <li><a href="#analytics" class="btn-primary logout" id="nav-btn" >Analytics</a></li>
+          <li><a href="#myform" class="btn-primary logout" id="nav-btn" >Add Product</a></li>
+          <li><a href="#logout" class="btn-primary logout" id="nav-btn" >Logout</a></li>
+      
+        </ul>
+      <button class="mobile-menu-toggle" aria-label="Toggle menu">
+         <ul class="nav-links">
+        <li><a href="/home">Home</a></li>
+        <li><a href="/home#products">About</a></li>
+        
+          <li><a href="#logout" class="btn-primary logout" id="nav-btn" >Logout</a></li>
+          <li><a href="#myform" class="btn-primary logout" id="nav-btn" >Add Product</a></li>
+          <li><a href="#logout" class="btn-primary logout" id="nav-btn" >Logout</a></li>
+
+      </ul>
+      </button>
+    </nav>
+  </header>
 
     <table>
         <tr>
@@ -14,9 +49,9 @@
             <th>Name</th>
             <th>Description</th>
             <th>Price</th>
+            <th>Quantity</th>
             <th>Image</th>
             <th>Actions</th>
-            <th>Quantity</th>
         </tr>
     <% products.forEach(element => { %>
         <tr>
@@ -41,6 +76,8 @@
         <input type="text" name="name" id="pname" placeholder="eg kettle" required>
         <label for="price">Price:</label>
         <input type="number" name="price" id="price" placeholder="eg 5000" required>
+        <label for="quantity">Quantity:</label>
+        <input type="number" name="quantity" id="quantity" placeholder="eg 50" required>
         <label for="description">Description:</label>
         <textarea name="description" id="description"></textarea>
         
@@ -54,11 +91,19 @@
         <button type="submit" id="sub">Add</button>
     </form>
 
+     <div id="analytics">
+         <canvas id="myChart" width="1500" height="1000"></canvas>
+    </div>
+
+    <p id="analysis"></p>
+
     <button id="logout">Logout</button>
 
-    <script src="dashboard.js">
+    <%- include('partials/footer') %>
 
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" ></script>
+    <script src="dashboard.js"></script>
+
 </body>
 </html>
 

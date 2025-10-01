@@ -4,7 +4,18 @@
     box-sizing: border-box;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-
+:root {
+  --primary: #4F46E5;
+  --primary-dark: #4338CA;
+  --secondary: #10B981;
+  --background: #F9FAFB;
+  --surface: #FFFFFF;
+  --text-primary: #111827;
+  --text-secondary: #6B7280;
+  --border: #E5E7EB;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
 body {
     background-color: #f5f7fa;
     color: #333;
@@ -14,15 +25,85 @@ body {
     margin: 0 auto;
 }
 
-/* Header Styles */
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #e1e4e8;
+.header {
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  margin-bottom: 20px;
 }
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
+  align-items: center;
+}
+
+.nav-links a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover {
+  color: var(--primary);
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+  padding: 0.5rem 1.25rem;
+  border-radius: 0.5rem;
+  transition: background 0.2s;
+}
+#nav-btn{
+  color: white;
+}
+.btn-primary:hover {
+  background: var(--primary-dark);
+  color: white;
+}
+
+.mobile-menu-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.mobile-menu-toggle span {
+  width: 24px;
+  height: 3px;
+  background: var(--text-primary);
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+
 
 h1 {
     color: #2c3e50;
@@ -178,6 +259,37 @@ button[type="reset"]:hover {
 .success-message.show {
     opacity: 1;
     transform: translateY(0);
+}
+#analysis{
+    position: relative;
+    /* right: 70vw;
+    transform: translate(-100%, -20%); */
+  color: var(--primary);
+  padding: 10px 10px;
+  width: 300px;
+  border: 2px solid #3498db;
+  border-radius: 20px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+  cursor: pointer;
+  margin-left: 50%;
+  margin-right: 50%;
+  text-align: center;
+  margin: auto;
+}
+#analysis:hover{
+    color: white;
+    background-color: var(--primary);
+}
+#logout{
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin-top: 50px;
+    /* margin: auto; */
+    background-color: #c0392b;
+    color: white;
 }
 
 /* Responsive Design */
